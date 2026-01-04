@@ -58,13 +58,14 @@ npm install -g discord-selfbot-mcp
 
 | feature | discord-selfbot-mcp | Maol-1997 | codebyyassine | elyxlz |
 |---------|---------------------|-----------|---------------|--------|
-| **tools count** | **60+** | ~8 | ~29 | ~5 |
-| **voice support** | ✅ | ❌ | ❌ | ❌ |
-| **thread support** | ✅ | ❌ | ❌ | ❌ |
-| **friend/block** | ✅ | ❌ | ❌ | ❌ |
-| **safety gates** | ✅ | ❌ | ❌ | ❌ |
-| **auto setup** | ✅ | ❌ | ❌ | ❌ |
-| **language** | typescript | typescript | javascript | python |
+| **tools** | **60+** | ~8 | ~29 | ~5 |
+| **auth** | token (auto-wizard) | token (manual) | token (manual) | email/pass |
+| **backend** | discord.js (light) | discord.js | discord.js | playwright (heavy) |
+| **voice** | ✅ | ❌ | ❌ | ❌ |
+| **friends** | ✅ | ❌ | ❌ | ❌ |
+| **threads** | ✅ | ❌ | ❌ | ❌ |
+| **safety** | ✅ (gated) | ❌ | ❌ | ❌ |
+| **setup** | **npx wizard** | manual | manual | manual |
 
 ### usage
 
