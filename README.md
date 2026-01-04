@@ -58,14 +58,16 @@ npm install -g discord-selfbot-mcp
 
 | feature | discord-selfbot-mcp | Maol-1997 | codebyyassine | elyxlz |
 |---------|---------------------|-----------|---------------|--------|
-| **tools** | **60+** | ~8 | ~29 | ~5 |
-| **auth** | token (auto-wizard) | token (manual) | token (manual) | email/pass |
-| **backend** | discord.js (light) | discord.js | discord.js | playwright (heavy) |
-| **voice** | ✅ | ❌ | ❌ | ❌ |
-| **friends** | ✅ | ❌ | ❌ | ❌ |
-| **threads** | ✅ | ❌ | ❌ | ❌ |
-| **safety** | ✅ (gated) | ❌ | ❌ | ❌ |
-| **setup** | **npx wizard** | manual | manual | manual |
+| **core** | | | | |
+| read / send messages | ✅ | ✅ | ✅ | ✅ |
+| list guilds / channels | ✅ | ✅ | ✅ | ✅ |
+| **advanced** | | | | |
+| **search messages** | ✅ | ❌ | ❌ | ❌ |
+| **create / delete channels** | ✅ | ❌ | ✅ | ❌ |
+| **voice / audio** | ✅ | ❌ | ❌ | ❌ |
+| **friends / blocking** | ✅ | ❌ | ❌ | ❌ |
+| **threads / pins** | ✅ | ❌ | ❌ | ❌ |
+| **setup wizard** | ✅ | ❌ | ❌ | ❌ |
 
 ### usage
 
