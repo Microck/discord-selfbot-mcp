@@ -160,10 +160,11 @@ async function main() {
   console.log('\nSelect MCP client to configure:');
   console.log('1. Claude Desktop');
   console.log('2. Cursor');
-  console.log('3. Generic (save to current directory)');
-  console.log('4. Just show me the token\n');
+  console.log('3. OpenCode / Claude Code (CLI)');
+  console.log('4. Generic (save to current directory)');
+  console.log('5. Just show me the token\n');
   
-  const choice = await prompt('Choice (1-4): ');
+  const choice = await prompt('Choice (1-5): ');
   
   console.log('\nLaunching browser...');
   console.log('Please log in to Discord in the browser window.\n');
@@ -219,24 +220,45 @@ async function main() {
   console.log('\nToken extracted successfully!');
   console.log(`Token: ${token.slice(0, 20)}...${token.slice(-10)}\n`);
   
-  if (choice === '4') {
+  if (choice === '5') {
     console.log('Full token:');
     console.log(token);
     process.exit(0);
   }
   
   const mcpConfig = generateMcpConfig(token);
-  
   let configPath: string;
-  switch (choice) {
-    case '1':
-      configPath = CONFIG_PATHS.claude;
-      break;
-    case '2':
-      configPath = CONFIG_PATHS.cursor;
-      break;
-    default:
-      configPath = CONFIG_PATHS.generic;
+
+  if (choice === '3') {
+    console.log('\n=== OpenCode / Claude Code Configuration ===');
+    console.log('For CLI tools, you usually provide the configuration in a project config file');
+    console.log('or simply configure the server directly.\n');
+    console.log('Here is the JSON configuration block to add to your settings:');
+    console.log(JSON.stringify(mcpConfig, null, 2));
+    
+    console.log('\nOr set as environment variable for manual execution:');
+    if (process.platform === 'win32') {
+      console.log(`set DISCORD_TOKEN=${token}`);
+    } else {
+      console.log(`export DISCORD_TOKEN='${token}'`);
+    }
+    
+    const save = await prompt('\nSave to mcp.json in current directory anyway? (y/n): ');
+    if (save.toLowerCase() !== 'y') {
+      process.exit(0);
+    }
+    configPath = path.join(process.cwd(), 'mcp.json');
+  } else {
+    switch (choice) {
+      case '1':
+        configPath = CONFIG_PATHS.claude;
+        break;
+      case '2':
+        configPath = CONFIG_PATHS.cursor;
+        break;
+      default:
+        configPath = CONFIG_PATHS.generic;
+    }
   }
   
   const finalConfig = mergeConfig(configPath, mcpConfig as { mcpServers: object });

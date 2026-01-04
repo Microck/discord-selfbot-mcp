@@ -37,7 +37,7 @@ This will:
 1. Open a browser window
 2. Let you log in to Discord
 3. Automatically grab your token
-4. Configure Claude Desktop or Cursor for you
+4. Configure Claude Desktop, Cursor, or OpenCode/Claude Code
 
 ## Manual Installation
 
