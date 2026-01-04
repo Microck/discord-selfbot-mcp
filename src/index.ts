@@ -18,6 +18,9 @@ import './tools/relationships/index.js';
 import './tools/notifications/index.js';
 import './tools/files/index.js';
 import './tools/events/index.js';
+import './tools/profile/index.js';
+import './tools/interactions/index.js';
+import './tools/invites/index.js';
 
 async function main() {
   try {

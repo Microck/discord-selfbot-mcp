@@ -191,19 +191,21 @@ async function main() {
   
   while (!token && Date.now() - startTime < maxWaitTime) {
     try {
-      await page.waitForURL('**/channels/**', { timeout: 5000 });
-      
-      await page.waitForTimeout(2000);
-      
       token = await extractToken(page);
       
       if (!token) {
-        await page.waitForTimeout(3000);
-        token = await extractToken(page);
+        await page.waitForTimeout(1000);
       }
     } catch {
       await page.waitForTimeout(1000);
     }
+  }
+  
+  if (token) {
+    console.log('\nToken detected!');
+    console.log('If Discord is asking for verification (email code, captcha, etc.), please complete it now.');
+    console.log('The browser will stay open until you are done.\n');
+    await prompt('Press Enter here when you are fully logged in and see the Discord chat... ');
   }
   
   await browser.close();

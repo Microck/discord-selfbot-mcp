@@ -177,6 +177,54 @@ const createInviteTool = createTool(
   }
 );
 
+const createGuildTool = createTool(
+  'create_guild',
+  'Create a new Discord server/guild',
+  z.object({
+    name: z.string().min(2).max(100).describe('Name of the new guild'),
+    icon: z.string().optional().describe('URL or base64 data URI for guild icon'),
+  }),
+  async (ctx, input) => {
+    try {
+      const guild = await ctx.client.guilds.create(input.name, {
+        icon: input.icon,
+      });
+
+      return success(formatGuild(guild));
+    } catch (error) {
+      return failure(forbiddenError(`Failed to create guild: ${error}`));
+    }
+  }
+);
+
+const deleteGuildTool = createTool(
+  'delete_guild',
+  'Delete a guild you own',
+  z.object({
+    guild_id: z.string().describe('Guild ID to delete'),
+  }),
+  async (ctx, input) => {
+    const guildId = parseGuildInput(input.guild_id);
+    const guild = ctx.client.guilds.cache.get(guildId);
+    
+    if (!guild) {
+      return failure(notFoundError('Guild', guildId));
+    }
+
+    if (guild.ownerId !== ctx.client.user?.id) {
+      return failure(forbiddenError('You do not own this guild'));
+    }
+
+    await guild.delete();
+
+    return success({
+      guildId,
+      name: guild.name,
+      message: `Deleted guild: ${guild.name}`,
+    });
+  }
+);
+
 export const guildTools = {
   name: 'guilds',
   tools: [
@@ -186,6 +234,8 @@ export const guildTools = {
     changeNicknameTool,
     leaveGuildTool,
     createInviteTool,
+    createGuildTool,
+    deleteGuildTool,
   ],
 };
 
