@@ -1,5 +1,8 @@
-import { chromium, type Browser } from 'playwright';
+import { chromium, type Browser, type BrowserContext } from 'playwright';
 import type { Client } from 'discord.js-selfbot-v13';
+import { join } from 'path';
+import { homedir } from 'os';
+import { mkdir, access } from 'fs/promises';
 import { getLogger } from '../logger.js';
 
 interface CaptchaSolverOptions {
@@ -16,6 +19,18 @@ interface CaptchaSolverResult {
   error?: string;
 }
 
+const USER_DATA_DIR = join(homedir(), '.discord-selfbot-mcp', 'browser-data');
+const STORAGE_STATE_PATH = join(USER_DATA_DIR, 'storage-state.json');
+
+async function storageStateExists(): Promise<boolean> {
+  try {
+    await access(STORAGE_STATE_PATH);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function solveCaptchaInBrowser(
   options: CaptchaSolverOptions
 ): Promise<CaptchaSolverResult> {
@@ -23,38 +38,51 @@ export async function solveCaptchaInBrowser(
   const logger = getLogger();
   
   let browser: Browser | null = null;
+  let context: BrowserContext | null = null;
   
   try {
+    await mkdir(USER_DATA_DIR, { recursive: true });
+    
     logger.info('Launching browser for captcha solving...');
     
     browser = await chromium.launch({
       headless: false,
-      args: ['--disable-blink-features=AutomationControlled'],
+      args: [
+        '--disable-blink-features=AutomationControlled',
+        '--no-default-browser-check',
+      ],
     });
     
-    const context = await browser.newContext({
+    const hasStorageState = await storageStateExists();
+    
+    context = await browser.newContext({
       viewport: { width: 1280, height: 800 },
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      ...(hasStorageState ? { storageState: STORAGE_STATE_PATH } : {}),
     });
     
     const page = await context.newPage();
     
-    await page.goto('https://discord.com/app', { waitUntil: 'domcontentloaded' });
-    
-    await page.evaluate((discordToken) => {
-      localStorage.setItem('token', JSON.stringify(discordToken));
+    await page.addInitScript((discordToken) => {
+      const stored = localStorage.getItem('token');
+      if (!stored || stored === 'null' || stored === '""' || stored === 'undefined') {
+        localStorage.setItem('token', JSON.stringify(discordToken));
+      }
     }, token);
     
     const inviteUrl = `https://discord.com/invite/${inviteCode}`;
-    logger.info(`Navigating to invite: ${inviteUrl}`);
-    await page.goto(inviteUrl, { waitUntil: 'networkidle' });
+    logger.info(`Opening: ${inviteUrl}`);
+    logger.info('>>> SOLVE THE CAPTCHA AND CLICK "Accept Invite" <<<');
+    
+    await page.goto(inviteUrl, { waitUntil: 'domcontentloaded' });
     
     const initialGuildIds = new Set(client.guilds.cache.keys());
     
-    logger.info('Waiting for user to solve captcha and join guild...');
-    logger.info(`Timeout: ${timeoutMs / 1000} seconds`);
+    logger.info(`Waiting for guild join... (timeout: ${timeoutMs / 1000}s)`);
     
     const result = await pollForGuildJoin(client, initialGuildIds, timeoutMs);
+    
+    await context.storageState({ path: STORAGE_STATE_PATH }).catch(() => {});
     
     return result;
   } catch (error) {
@@ -65,6 +93,9 @@ export async function solveCaptchaInBrowser(
       error: message,
     };
   } finally {
+    if (context) {
+      await context.storageState({ path: STORAGE_STATE_PATH }).catch(() => {});
+    }
     if (browser) {
       await browser.close().catch(() => {});
     }
@@ -84,7 +115,7 @@ async function pollForGuildJoin(
     const checkGuilds = () => {
       for (const [guildId, guild] of client.guilds.cache) {
         if (!initialGuildIds.has(guildId)) {
-          logger.info(`Successfully joined guild: ${guild.name} (${guildId})`);
+          logger.info(`Joined guild: ${guild.name} (${guildId})`);
           resolve({
             success: true,
             guildId,
@@ -95,10 +126,10 @@ async function pollForGuildJoin(
       }
       
       if (Date.now() - startTime >= timeoutMs) {
-        logger.warn('Captcha solver timed out');
+        logger.warn('Timeout waiting for guild join');
         resolve({
           success: false,
-          error: 'Timeout waiting for guild join. Please try again.',
+          error: 'Timeout. Close browser and try again.',
         });
         return;
       }
