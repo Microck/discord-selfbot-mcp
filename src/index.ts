@@ -21,6 +21,7 @@ import './tools/events/index.js';
 import './tools/profile/index.js';
 import './tools/interactions/index.js';
 import './tools/invites/index.js';
+import './tools/slash/index.js';
 
 async function main() {
   try {

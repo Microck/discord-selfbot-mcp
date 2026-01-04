@@ -2,6 +2,8 @@ import { z } from 'zod';
 import { createTool, success, failure, registerToolGroup } from '../../mcp/registry.js';
 import { formatGuild } from '../../core/formatting/index.js';
 import { forbiddenError, notFoundError } from '../../core/errors/index.js';
+import { solveCaptchaInBrowser } from '../../core/browser/captcha-solver.js';
+import { getLogger } from '../../core/logger.js';
 
 const acceptInviteTool = createTool(
   'accept_invite',
@@ -11,6 +13,7 @@ const acceptInviteTool = createTool(
   }),
   async (ctx, input) => {
     const code = input.invite_code.split('/').pop() ?? input.invite_code;
+    const logger = getLogger();
 
     try {
       const joined = await ctx.client.acceptInvite(code, {
@@ -37,8 +40,25 @@ const acceptInviteTool = createTool(
       const message = error instanceof Error ? error.message : String(error);
       
       if (message.includes('captcha') || message.includes('CAPTCHA')) {
+        logger.info('Captcha required, launching browser for manual solving...');
+        
+        const browserResult = await solveCaptchaInBrowser({
+          inviteCode: code,
+          client: ctx.client,
+          token: ctx.config.discordToken,
+          timeoutMs: 300000,
+        });
+        
+        if (browserResult.success) {
+          const guild = ctx.client.guilds.cache.get(browserResult.guildId!);
+          return success({
+            guild: guild ? formatGuild(guild) : { id: browserResult.guildId, name: browserResult.guildName },
+            message: `Joined guild via browser: ${browserResult.guildName}`,
+          });
+        }
+        
         return failure(forbiddenError(
-          'Captcha required. Configure CAPTCHA_SERVICE (capsolver/capmonster/nopecha) and CAPTCHA_API_KEY to auto-solve.'
+          `Captcha solving failed: ${browserResult.error}. Make sure you're logged into Discord in your browser.`
         ));
       }
       

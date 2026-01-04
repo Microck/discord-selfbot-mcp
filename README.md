@@ -5,7 +5,7 @@
 <h1 align="center">discord-selfbot-mcp</h1>
 
 <p align="center">
-  comprehensive discord selfbot mcp server with 60+ tools for full user autonomy
+  comprehensive discord selfbot mcp server with 64 tools for full user autonomy
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@ npm install -g discord-selfbot-mcp
 
 ### features
 
-**60 tools** across 14 categories.
+**64 tools** across 15 categories.
 
 | category | tools | description |
 |----------|-------|-------------|
@@ -51,8 +51,9 @@ npm install -g discord-selfbot-mcp
 | **files** | 3 | upload, download, list |
 | **events** | 4 | list, get, rsvp, create |
 | **profile** | 1 | edit_profile (avatar, bio, username) |
-| **interactions** | 1 | trigger_typing |
-| **invites** | 1 | accept_invite |
+| **interactions** | 4 | trigger_typing, click_button, select_menu, get_components |
+| **invites** | 1 | accept_invite (auto browser fallback for captcha) |
+| **slash** | 1 | send_slash (execute bot slash commands, waits for response) |
 
 ### comparison
 
@@ -71,8 +72,11 @@ npm install -g discord-selfbot-mcp
 | join voice | ✅ | ❌ | ❌ | ❌ |
 | manage friends | ✅ | ❌ | ❌ | ❌ |
 | manage threads | ✅ | ❌ | ❌ | ❌ |
+| slash commands | ✅ | ❌ | ❌ | ❌ |
+| click buttons | ✅ | ❌ | ❌ | ❌ |
+| select menus | ✅ | ❌ | ❌ | ❌ |
 | setup wizard | ✅ | ❌ | ❌ | ❌ |
-| **total tools** | **60** | **7** | **29** | **4** |
+| **total tools** | **64** | **7** | **29** | **4** |
 
 ### usage
 
@@ -125,6 +129,45 @@ discord may require captcha when joining servers. configure auto-solve:
 | CapMonster | `capmonster` | ~$0.70/1k | [capmonster.cloud](https://capmonster.cloud) |
 | NopeCHA | `nopecha` | 100 free/day | [nopecha.com](https://nopecha.com) |
 
+if auto-solve fails or no service is configured, the MCP will open your system browser for manual captcha solving.
+
+### slash commands
+
+execute bot slash commands in any channel:
+
+```typescript
+send_slash({
+  channel_id: "123456789",
+  bot_id: "987654321",
+  command: "task import",
+  args: ["argument1", "argument2"]
+})
+```
+
+### bot testing (buttons, menus)
+
+click buttons and select dropdown options on bot messages:
+
+```typescript
+click_button({
+  channel_id: "123456789",
+  message_id: "987654321",
+  button_id: "0,0"  // first button (row 0, col 0) or use custom_id
+})
+
+select_menu({
+  channel_id: "123456789",
+  message_id: "987654321", 
+  menu_id: "0",  // first menu or custom_id
+  values: ["option1", "option2"]
+})
+
+get_components({
+  channel_id: "123456789",
+  message_id: "987654321"
+})  // inspect all buttons/menus on a message
+```
+
 ### project structure
 
 ```bash
@@ -140,6 +183,7 @@ src/
 │   ├── guilds/
 │   ├── interactions/
 │   ├── invites/
+│   ├── slash/
 │   ├── messages/
 │   ├── notifications/
 │   ├── presence/
@@ -159,7 +203,7 @@ src/
 | **token invalid** | run `npx discord-selfbot-mcp-setup` to extract a fresh one |
 | **rate limited** | reduce `RATE_LIMIT_CONCURRENCY` env var (default: 3) |
 | **missing permissions** | ensure account has access to the guild/channel |
-| **captcha required** | configure `CAPTCHA_SERVICE` and `CAPTCHA_API_KEY` (see above) |
+| **captcha required** | configure `CAPTCHA_SERVICE` and `CAPTCHA_API_KEY`, or let browser fallback handle it |
 
 ### license
 
