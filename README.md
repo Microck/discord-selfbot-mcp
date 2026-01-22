@@ -22,11 +22,11 @@
 
 **Codex**  
 Tell Codex:  
-Fetch and follow instructions from https://raw.githubusercontent.com/Microck/discord-py-self-mcp/refs/heads/master/.codex/INSTALL.md
+Fetch and follow instructions from https://raw.githubusercontent.com/Microck/discord.py-self-mcp/refs/heads/master/.codex/INSTALL.md
 
 **OpenCode**  
 Tell OpenCode:  
-Fetch and follow instructions from https://raw.githubusercontent.com/Microck/discord-py-self-mcp/refs/heads/master/.opencode/INSTALL.md
+Fetch and follow instructions from https://raw.githubusercontent.com/Microck/discord.py-self-mcp/refs/heads/master/.opencode/INSTALL.md
 
 ---
 
@@ -40,9 +40,9 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Microck/dis
 **install**:
 
 ```bash
-uv tool install git+https://github.com/Microck/discord-py-self-mcp.git
+uv tool install git+https://github.com/Microck/discord.py-self-mcp.git
 # or
-pip install git+https://github.com/Microck/discord-py-self-mcp.git
+pip install git+https://github.com/Microck/discord.py-self-mcp.git
 ```
 
 > **note**: voice dependencies (PyNaCl) are included by default. on linux, ensure system packages are installed first.
