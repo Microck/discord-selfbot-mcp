@@ -94,31 +94,40 @@ powered by the robust `discord.py-self` library.
 |----------|-------|-------------|
 | **system** | 2 | get_user_info, list_guilds |
 | **messages** | 2 | send_message, read_messages |
-
-*(more tools being ported from original node.js version - stay tuned)*
+| **channels** | 2 | create_channel, delete_channel |
+| **voice** | 2 | join_voice_channel, leave_voice_channel |
+| **relationships** | 4 | list_friends, add_friend, remove_friend, send_friend_request |
+| **presence** | 2 | set_status, set_activity |
+| **interactions** | 2 | send_slash_command, click_button |
 
 ### comparison
 
 | feature | discord-selfbot-mcp | Maol-1997 | codebyyassine | elyxlz |
 |---------|---------------------|-----------|---------------|--------|
-| read messages | yes | yes | yes | yes |
-| send messages | yes | yes | yes | yes |
-| list guilds | yes | yes | yes | yes |
-| list channels | yes | yes | yes | yes |
-| get user info | yes | yes | yes | no |
-| search messages | planned | no | no | no |
-| create channels | planned | no | yes | no |
-| delete channels | planned | no | yes | no |
-| edit messages | planned | no | no | no |
-| delete messages | planned | no | no | no |
-| join voice | planned | no | no | no |
-| manage friends | planned | no | no | no |
-| manage threads | planned | no | no | no |
-| slash commands | planned | no | no | no |
-| click buttons | planned | no | no | no |
-| select menus | planned | no | no | no |
-| setup wizard | yes | no | no | no |
-| captcha fallback | partial | no | no | no |
+| read messages | ✅ | ✅ | ✅ | ✅ |
+| send messages | ✅ | ✅ | ✅ | ✅ |
+| list guilds | ✅ | ✅ | ✅ | ✅ |
+| list channels | ✅ | ✅ | ✅ | ✅ |
+| get user info | ✅ | ✅ | ✅ | ❌ |
+| search messages | 🚧 | ❌ | ❌ | ❌ |
+| create channels | ✅ | ❌ | ✅ | ❌ |
+| delete channels | ✅ | ❌ | ✅ | ❌ |
+| edit messages | 🚧 | ❌ | ❌ | ❌ |
+| delete messages | 🚧 | ❌ | ❌ | ❌ |
+| join voice | ✅ | ❌ | ❌ | ❌ |
+| manage friends | ✅ | ❌ | ❌ | ❌ |
+| manage threads | 🚧 | ❌ | ❌ | ❌ |
+| slash commands | ✅ | ❌ | ❌ | ❌ |
+| click buttons | ✅ | ❌ | ❌ | ❌ |
+| select menus | 🚧 | ❌ | ❌ | ❌ |
+| setup wizard | ✅ | ❌ | ❌ | ❌ |
+| captcha fallback | ⚠️ | ❌ | ❌ | ❌ |
+
+**legend**:
+✅ = supported
+❌ = not supported
+🚧 = planned / in progress
+⚠️ = partial support (browser fallback)
 
 ---
 
@@ -141,9 +150,14 @@ discord_selfbot_mcp/
 ├── main.py         # mcp server entry point
 ├── setup.py        # setup wizard (token extraction)
 └── tools/          # tool implementations
+    ├── channels.py
     ├── guilds.py
+    ├── interactions.py
     ├── messages.py
-    └── registry.py
+    ├── presence.py
+    ├── registry.py
+    ├── relationships.py
+    └── voice.py
 ```
 
 ---
