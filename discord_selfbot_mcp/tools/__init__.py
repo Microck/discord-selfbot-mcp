@@ -7,3 +7,8 @@ from . import voice
 from . import presence
 from . import interactions
 from . import threads
+from . import reactions
+from . import members
+from . import invites
+from . import profile
+
