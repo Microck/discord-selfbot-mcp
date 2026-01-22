@@ -41,7 +41,25 @@ async def send_friend_request(arguments: dict):
         username = arguments["username"]
         discriminator = arguments.get("discriminator")
         
-        return [TextContent(type="text", text="Sending friend requests by username is complex without ID. Please use add_friend_by_id if possible.")]
+        # 1. Search in local cache (users shared in guilds)
+        target_user = None
+        for user in client.users:
+            if user.name == username:
+                if discriminator:
+                    if user.discriminator == discriminator:
+                        target_user = user
+                        break
+                else:
+                    # New username system or no discrim provided
+                    if user.discriminator == "0" or not discriminator:
+                        target_user = user
+                        break
+        
+        if target_user:
+            await target_user.send_friend_request()
+            return [TextContent(type="text", text=f"Sent friend request to {target_user.name} (found in cache)")]
+
+        return [TextContent(type="text", text=f"User '{username}' not found in cached guilds. Please use 'add_friend' with their User ID.")]
     except Exception as e:
         return [TextContent(type="text", text=f"Error: {str(e)}")]
 
