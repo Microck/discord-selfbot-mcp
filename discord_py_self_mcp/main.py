@@ -4,8 +4,8 @@ import logging
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource
-from discord_selfbot_mcp.bot import client
-from discord_selfbot_mcp.tools import registry
+from discord_py_self_mcp.bot import client
+from discord_py_self_mcp.tools import registry
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("discord-selfbot-mcp")

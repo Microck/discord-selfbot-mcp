@@ -1,4 +1,4 @@
-# install discord-selfbot-mcp
+# install discord-py-self-mcp
 
 ## prerequisites
 
@@ -11,7 +11,7 @@
 ### 1. install the package
 
 ```bash
-uv tool install git+https://github.com/Microck/discord-selfbot-mcp.git
+uv tool install git+https://github.com/Microck/discord-py-self-mcp.git
 ```
 
 ### 2. run the setup wizard
@@ -19,9 +19,9 @@ uv tool install git+https://github.com/Microck/discord-selfbot-mcp.git
 run this command to generate your config and get your token:
 
 ```bash
-uv tool run discord-selfbot-mcp-setup
+uv tool run discord-py-self-mcp-setup
 # or if running from source
-python3 discord_selfbot_mcp/setup.py
+python3 discord_py_self_mcp/setup.py
 ```
 
 - choose option 1 to extract token via browser (requires playwright)
@@ -34,8 +34,8 @@ add the following to your `~/.config/opencode/opencode.json` (or your project's 
 ```json
 {
   "mcp": {
-    "discord-selfbot": {
-      "command": ["uv", "tool", "run", "discord-selfbot-mcp"],
+    "discord-py-self": {
+      "command": ["uv", "tool", "run", "discord-py-self-mcp"],
       "enabled": true,
       "type": "local",
       "environment": {

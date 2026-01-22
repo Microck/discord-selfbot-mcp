@@ -1,4 +1,4 @@
-# install discord-selfbot-mcp for codex
+# install discord-py-self-mcp for codex
 
 ## prerequisites
 
@@ -11,7 +11,7 @@
 ### 1. install the package
 
 ```bash
-uv tool install git+https://github.com/Microck/discord-selfbot-mcp.git
+uv tool install git+https://github.com/Microck/discord-py-self-mcp.git
 ```
 
 ### 2. get your token
@@ -19,7 +19,7 @@ uv tool install git+https://github.com/Microck/discord-selfbot-mcp.git
 run the setup wizard to extract your token:
 
 ```bash
-uv tool run discord-selfbot-mcp-setup
+uv tool run discord-py-self-mcp-setup
 ```
 
 ### 3. configure codex
@@ -29,9 +29,9 @@ add the following to your codex mcp configuration:
 ```json
 {
   "mcpServers": {
-    "discord-selfbot": {
+    "discord-py-self": {
       "command": "uv",
-      "args": ["tool", "run", "discord-selfbot-mcp"],
+      "args": ["tool", "run", "discord-py-self-mcp"],
       "env": {
         "DISCORD_TOKEN": "your_discord_token_here"
       }

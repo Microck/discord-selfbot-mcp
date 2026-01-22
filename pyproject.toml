@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "discord-selfbot-mcp"
+name = "discord-py-self-mcp"
 version = "0.1.0"
 authors = [
   { name="Microck", email="your.email@example.com" },
@@ -20,5 +20,6 @@ dependencies = [
 ]
 
 [project.scripts]
-discord-selfbot-mcp = "discord_selfbot_mcp.main:main"
-discord-selfbot-mcp-setup = "discord_selfbot_mcp.setup:main"
+discord-py-self-mcp = "discord_py_self_mcp.main:main"
+discord-py-self-mcp-setup = "discord_py_self_mcp.setup:main"
+
