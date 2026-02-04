@@ -140,10 +140,25 @@ pip install git+https://github.com/Microck/discord.py-self-mcp.git
 
 ### Step 3: Run the setup wizard
 
+**Interactive Mode (for humans)**:
 ```bash
 discord-selfbot-mcp-setup
 # or
 python3 -m discord_py_self_mcp.setup
+```
+
+**Non-Interactive Mode (for agents)**:
+Set `DISCORD_TOKEN` and optionally `MCP_CONFIG_PATH` to skip prompts.
+
+```bash
+# Example: Write to default location (~/.config/mcp.json)
+export DISCORD_TOKEN="your_token_here"
+discord-selfbot-mcp-setup
+
+# Example: Write to specific OpenCode config
+export DISCORD_TOKEN="your_token_here"
+export MCP_CONFIG_PATH="~/.config/opencode/opencode.json"
+discord-selfbot-mcp-setup
 ```
 
 **Important**: Use the setup wizard to configure your MCP client. Manual config file creation can lead to unexpected issues.

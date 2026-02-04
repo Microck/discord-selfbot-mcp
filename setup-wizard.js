@@ -202,6 +202,31 @@ function generateConfig(token) {
 }
 
 async function main() {
+  // Non-interactive mode via environment variables
+  if (process.env.DISCORD_TOKEN) {
+    const token = process.env.DISCORD_TOKEN;
+    const targetPath = process.env.MCP_CONFIG_PATH || path.join(os.homedir(), '.config', 'mcp.json'); // Default to ~/.config/mcp.json if not specified
+    
+    console.log('Running in non-interactive mode (DISCORD_TOKEN set).');
+    console.log('Generating configuration...');
+    
+    // Auto-detect if path points to OpenCode config
+    const isOpenCode = targetPath.endsWith('opencode.json');
+    const mode = isOpenCode ? 'opencode-auto' : 'mcpServers';
+
+    try {
+      const { backupPath, actualMode } = await applyConfigToFile(targetPath, token, mode);
+      console.log(`\nWrote config to: ${targetPath}`);
+      if (backupPath) console.log(`Backup created: ${backupPath}`);
+      if (actualMode === 'opencode-mcp') console.log('Configured using OpenCode `mcp` shape.');
+      else console.log('Configured using `mcpServers` shape.');
+      process.exit(0);
+    } catch (e) {
+      console.error(`\nFailed to write config: ${e.message}`);
+      process.exit(1);
+    }
+  }
+
   console.log('=== Discord Selfbot MCP Setup ===');
   console.log('1. Extract token automatically (browser)');
   console.log('2. Enter token manually');
