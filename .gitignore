@@ -35,6 +35,17 @@ venv.bak/
 # VS Code
 .vscode/
 
+# Local agent/client dirs
+.opencode/
+.codex/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
 # Project specific
 mcp.json
 backup_node/
