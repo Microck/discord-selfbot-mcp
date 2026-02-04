@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "discord-py-self": {
+      "command": "discord-py-self-mcp",
+      "env": {
+        "DISCORD_TOKEN": "${DISCORD_TOKEN}",
+        "GROQ_API_KEY": "${GROQ_API_KEY}",
+        "CAPTCHA_PROXY": "${CAPTCHA_PROXY}"
+      }
+    }
+  }
+}
