@@ -146,6 +146,8 @@ discord-selfbot-mcp-setup
 python3 -m discord_py_self_mcp.setup
 ```
 
+**Important**: Use the setup wizard to configure your MCP client. Manual config file creation can lead to unexpected issues.
+
 ### Step 4: Configure the user's MCP client
 
 Tell the user to paste the generated MCP config into their MCP client settings and set `DISCORD_TOKEN` in the server `env`.
