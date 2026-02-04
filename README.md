@@ -25,10 +25,6 @@
 
 <video src="./showcase.mp4" controls preload="auto" width="100%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 800px;"></video>
 
-<blockquote>
-⚠️ <strong>Note:</strong> Video is locally referenced and won't render on GitHub. Clone the repository and view locally to see the demo.
-</blockquote>
-
 </details>
 
 ---
