@@ -1,11 +1,30 @@
 import os
+import os
 import discord
 import asyncio
+import inspect
+import importlib
 from typing import Dict, Any, Optional
+from google.protobuf import json_format
 from dotenv import load_dotenv
 from .captcha.solver import HCaptchaSolver
 
 load_dotenv()
+
+if (
+    "including_default_value_fields"
+    not in inspect.signature(json_format.MessageToDict).parameters
+):
+
+    def _message_to_dict_compat(message, **kwargs):
+        if "including_default_value_fields" in kwargs:
+            kwargs["always_print_fields_with_no_presence"] = kwargs.pop(
+                "including_default_value_fields"
+            )
+        return json_format.MessageToDict(message, **kwargs)
+
+    discord_settings = importlib.import_module("discord.settings")
+    setattr(discord_settings, "MessageToDict", _message_to_dict_compat)
 
 
 async def captcha_handler(
