@@ -7,7 +7,10 @@ from .captcha.solver import HCaptchaSolver
 
 load_dotenv()
 
-async def captcha_handler(captcha_required, client: discord.Client) -> str:
+
+async def captcha_handler(
+    captcha_required, client: Optional[discord.Client] = None
+) -> str:
     print(f"[CAPTCHA] Triggered")
     try:
         sitekey = "a9b5fb07-92ff-493f-86fe-352a2803b3df"
@@ -15,12 +18,12 @@ async def captcha_handler(captcha_required, client: discord.Client) -> str:
             sitekey=sitekey,
             host="discord.com",
             debug=True,
-            proxy=os.getenv("CAPTCHA_PROXY")
+            proxy=os.getenv("CAPTCHA_PROXY"),
         )
         result = await solver.solve()
-        if result.get('success'):
+        if result.get("success"):
             print(f"[CAPTCHA] Solved: {result['token'][:20]}...")
-            return result['token']
+            return result["token"]
         else:
             print(f"[CAPTCHA] Failed: {result.get('error')}")
             raise Exception(f"Captcha solve failed: {result.get('error')}")
@@ -28,28 +31,49 @@ async def captcha_handler(captcha_required, client: discord.Client) -> str:
         print(f"[CAPTCHA] Error: {e}")
         raise
 
+
+class CaptchaHandlerImpl(discord.CaptchaHandler):
+    def __init__(self, client: Optional[discord.Client] = None):
+        self.client = client
+
+    async def fetch_token(
+        self, data: Dict[str, Any], proxy: Optional[str] = None, proxy_auth=None
+    ) -> str:
+        return await captcha_handler(data, self.client)
+
+    async def prefetch_token(
+        self, proxy: Optional[str] = None, proxy_auth=None
+    ) -> None:
+        pass
+
+    async def startup(self):
+        pass
+
+
 class SelfBot(discord.Client):
     def __init__(self):
-        super().__init__(captcha_handler=captcha_handler)
+        captcha_handler_instance = CaptchaHandlerImpl(self)
+        super().__init__(captcha_handler=captcha_handler_instance)
 
     async def on_ready(self):
-        print(f'[READY] Logged in as {self.user} (ID: {self.user.id})')
-        print(f'[READY] Guilds: {len(self.guilds)}')
-        print(f'[READY] Private channels: {len(self.private_channels)}')
+        print(f"[READY] Logged in as {self.user} (ID: {self.user.id})")
+        print(f"[READY] Guilds: {len(self.guilds)}")
+        print(f"[READY] Private channels: {len(self.private_channels)}")
 
     async def on_connect(self):
-        print('[CONNECT] Connected to Discord gateway')
+        print("[CONNECT] Connected to Discord gateway")
 
     async def on_disconnect(self):
-        print('[DISCONNECT] Disconnected from Discord gateway')
+        print("[DISCONNECT] Disconnected from Discord gateway")
 
     async def on_error(self, event, *args, **kwargs):
         if isinstance(event, Exception):
-            print(f'[ERROR] {type(event).__name__}: {event}')
+            print(f"[ERROR] {type(event).__name__}: {event}")
         else:
-            print(f'[ERROR] Event: {event}')
+            print(f"[ERROR] Event: {event}")
 
     async def on_resumed(self):
-        print('[RESUMED] Session resumed')
+        print("[RESUMED] Session resumed")
+
 
 client = SelfBot()
